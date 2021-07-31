@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Application\Services\VonageApiService;
 use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Monolog\Handler\StreamHandler;
@@ -27,13 +28,18 @@ return function (ContainerBuilder $containerBuilder) {
             return $logger;
         },
 
-        \Twig\Environment::class => function (ContainerInterface $c): Environment {
+        \Twig\Environment::class => function (ContainerInterface $container): Environment {
             $loader = new Twig\Loader\FilesystemLoader(__DIR__ . '/../src/Application/Views');
             $twig = new Twig\Environment($loader, [
                 __DIR__ . '/../var/cache'
             ]);
             $twig->enableDebug();
             return $twig;
-        }
+        },
+
+        \App\Application\Services\VonageApiService::class => function (ContainerInterface $container) {
+            $service = new App\Application\Services\VonageApiService();
+            return $service;
+        },
     ]);
 };
