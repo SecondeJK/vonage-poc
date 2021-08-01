@@ -24,7 +24,10 @@ class HomePageHandler implements RequestHandlerInterface
        $response = new Response();
 
        $response->getBody()->write(
-           $this->twig->render('home.twig', ['info' => $this->service->keys])
+           $this->twig->render('home.twig', [
+               'key' => $this->service->apiKey,
+               'secret' => $this->service->apiSecret,
+            ])
        );
 
        return $response;

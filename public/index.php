@@ -8,8 +8,13 @@ use App\Application\Settings\SettingsInterface;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
+use Dotenv\Dotenv;
 
 require __DIR__ . '/../vendor/autoload.php';
+
+// Load in environment variables (i.e. Vonage keys)
+$dotEnv = Dotenv::createImmutable(__DIR__ . '/../');
+$dotEnv->load();
 
 // Instantiate PHP-DI ContainerBuilder
 $containerBuilder = new ContainerBuilder();
@@ -36,6 +41,7 @@ $container = $containerBuilder->build();
 // Instantiate the app
 AppFactory::setContainer($container);
 $app = AppFactory::create();
+
 $callableResolver = $app->getCallableResolver();
 
 // Register middleware
@@ -75,4 +81,5 @@ $errorMiddleware->setDefaultErrorHandler($errorHandler);
 // Run App & Emit Response
 $response = $app->handle($request);
 $responseEmitter = new ResponseEmitter();
+
 $responseEmitter->emit($response);

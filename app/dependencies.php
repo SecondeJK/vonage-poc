@@ -38,7 +38,10 @@ return function (ContainerBuilder $containerBuilder) {
         },
 
         \App\Application\Services\VonageApiService::class => function (ContainerInterface $container) {
-            $service = new App\Application\Services\VonageApiService();
+            $service = new App\Application\Services\VonageApiService(
+                $_ENV['VONAGE_API_KEY'],
+                $_ENV['VONAGE_API_SECRET'],
+            );
             return $service;
         },
     ]);

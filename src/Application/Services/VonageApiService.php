@@ -4,10 +4,13 @@ namespace App\Application\Services;
 
 class VonageApiService {
 
-    public string $keys;
+    public string $apiKey;
 
-    public function __construct()
+    public string $apiSecret;
+
+    public function __construct($apiKey, $apiSecret)
     {
-        $this->keys = 'wiring test';
+        $this->apiKey = $apiKey;
+        $this->apiSecret = $apiSecret;
     }
 }   
