@@ -8,9 +8,25 @@ class VonageApiService {
 
     public string $apiSecret;
 
-    public function __construct($apiKey, $apiSecret)
-    {
+    public string $baseUrl;
+
+    public function __construct(
+        string $apiKey,
+        string $apiSecret,
+        string $baseUrl
+    ) {
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;
+        $this->baseUrl = $baseUrl;
+    }
+
+    private function get(string $url)
+    {
+
+    }
+
+    public function getBalance()
+    {
+        
     }
 }   
