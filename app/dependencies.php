@@ -41,7 +41,6 @@ return function (ContainerBuilder $containerBuilder) {
             $service = new App\Application\Services\VonageApiService(
                 $_ENV['VONAGE_API_KEY'],
                 $_ENV['VONAGE_API_SECRET'],
-                $_ENV['VONAGE_API_BASE_URL'],
             );
             return $service;
         },

@@ -17,12 +17,10 @@ class VonageApiService {
     public function __construct(
         string $apiKey,
         string $apiSecret,
-        string $baseUrl,
     ) {
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;
-        $this->baseUrl = $baseUrl;
-        $this->setupBaseUrl();
+        $this->buildClient();
     }
 
     private function returnAuthQueryString(): string
@@ -35,11 +33,26 @@ class VonageApiService {
         return http_build_query($payload);
     }
 
-    private function setupBaseUrl(): void
+    private function setBase64Auth(): void
     {
-        $this->httpClient = new Client([
-            'base_uri' => $this->baseUrl,
-        ]);
+
+    }
+
+    private function buildClient(): void
+    {
+        $this->httpClient = new Client();
+    }
+
+    private function useBaseUrl(string $apiIdentifier): void
+    {
+        switch ($apiIdentifier) {
+            case 'restNexmo':
+                $baseUrl = 'https://rest.nexmo.com';
+            case 'v2Nexmo':
+                $baseUrl = 'https://api.nexmo.com/v2';
+        }
+
+        $this->httpClient->setDefaultOption('base_uri', $baseUrl);
     }
 
     private function get(string $url)
@@ -57,11 +70,13 @@ class VonageApiService {
         return $this->httpClient->patch($url);
     }
 
-    public function getAccountBalance()
+    public function getAccountBalance(): int
     {
+        $this->useBaseUrl(apiIdentifier: 'restNexmo');
+
         $response= $this->get('account/get-balance?'. $this->returnAuthQueryString());
         $returnedPayload = json_decode($response->getBody()->getContents(), true);
 
-        return $returnedPayload['value'];
+        return (int)$returnedPayload['value'];
     }
 }   
