@@ -3,6 +3,7 @@
 namespace App\Application\Handlers;
 
 use App\Application\Services\VonageApiService;
+use phpDocumentor\Reflection\Types\This;
 use Psr\Http\Server\RequestHandlerInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -25,8 +26,7 @@ class HomePageHandler implements RequestHandlerInterface
 
        $response->getBody()->write(
            $this->twig->render('home.twig', [
-               'key' => $this->service->apiKey,
-               'secret' => $this->service->apiSecret,
+                'balance' => $this->service->getAccountBalance(),
             ])
        );
 
