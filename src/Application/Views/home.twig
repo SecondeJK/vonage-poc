@@ -24,7 +24,10 @@
                 <button type="submit" style="margin-top:10px;" class="btn btn-primary">Submit</button>
             </form>
             <h4>Current Applications</h4>
-
+            {% for application in applications %}
+                {{ application.id }}
+                {{ application.name }}
+            {% endfor %}
         </div>
     </body>
 </html>

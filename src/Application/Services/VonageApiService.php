@@ -42,29 +42,14 @@ class VonageApiService {
         return http_build_query($payload);
     }
 
-    private function setBase64Auth(): void
+    private function base64Auth(): string
     {
-
-    }
-
-    private function get(string $url)
-    {
-        return $this->httpClient->get($url);
-    }
-
-    private function post(string $url)
-    {
-        return $this->httpClient->post($url);
-    }
-
-    private function patch(string $url)
-    {
-        return $this->httpClient->patch($url);
+        return 'Basic ' . base64_encode($this->apiKey . ':' . $this->apiSecret);
     }
 
     public function getAccountBalance()
     {
-        $response= $this->get($this->baseUrl['account'] . 'account/get-balance?'. $this->returnAuthQueryString());
+        $response = $this->httpClient->get($this->baseUrl['account'] . 'account/get-balance?'. $this->returnAuthQueryString());
         $returnedPayload = json_decode($response->getBody()->getContents(), true);
 
         return $returnedPayload['value'];
@@ -72,6 +57,13 @@ class VonageApiService {
 
     public function getApplications(): array
     {
-        return ['ExampleApp1', 'ExampleApp2'];
+        $response = $this->httpClient->get($this->baseUrl['v2'] . 'applications', [
+            'headers' => [
+                'Authorization' => $this->base64Auth(),
+            ],
+        ]);
+
+        $responsePayload = json_decode($response->getBody()->getContents(), true);
+        return $responsePayload['_embedded']['applications'];
     }
 }   

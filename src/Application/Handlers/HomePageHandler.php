@@ -23,7 +23,7 @@ class HomePageHandler implements RequestHandlerInterface
    public function handle(ServerRequestInterface $request): ResponseInterface
    {
        $response = new Response();
-
+       
        $response->getBody()->write(
            $this->twig->render('home.twig', [
                 'balance' => $this->service->getAccountBalance(),
