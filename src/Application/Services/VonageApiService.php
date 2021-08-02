@@ -10,7 +10,16 @@ class VonageApiService {
 
     protected string $apiSecret;
 
-    protected string $baseUrl;
+    /**
+     * baseURL has to be calculated here,
+     * cannot use DI because baseURL on guzzle cannot be
+     * dynamically reclared and this task uses two totally
+     * different API endpoints.
+     */
+    protected array $baseUrl = [
+        'account' => 'https://rest.nexmo.com/',
+        'v2' => 'https://api.nexmo.com/v2/'
+    ];
 
     protected Client $httpClient;
 
@@ -20,7 +29,7 @@ class VonageApiService {
     ) {
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;
-        $this->buildClient();
+        $this->httpClient = new Client();
     }
 
     private function returnAuthQueryString(): string
@@ -38,23 +47,6 @@ class VonageApiService {
 
     }
 
-    private function buildClient(): void
-    {
-        $this->httpClient = new Client();
-    }
-
-    private function useBaseUrl(string $apiIdentifier): void
-    {
-        switch ($apiIdentifier) {
-            case 'restNexmo':
-                $baseUrl = 'https://rest.nexmo.com';
-            case 'v2Nexmo':
-                $baseUrl = 'https://api.nexmo.com/v2';
-        }
-
-        $this->httpClient->setDefaultOption('base_uri', $baseUrl);
-    }
-
     private function get(string $url)
     {
         return $this->httpClient->get($url);
@@ -70,13 +62,16 @@ class VonageApiService {
         return $this->httpClient->patch($url);
     }
 
-    public function getAccountBalance(): int
+    public function getAccountBalance()
     {
-        $this->useBaseUrl(apiIdentifier: 'restNexmo');
-
-        $response= $this->get('account/get-balance?'. $this->returnAuthQueryString());
+        $response= $this->get($this->baseUrl['account'] . 'account/get-balance?'. $this->returnAuthQueryString());
         $returnedPayload = json_decode($response->getBody()->getContents(), true);
 
-        return (int)$returnedPayload['value'];
+        return $returnedPayload['value'];
+    }
+
+    public function getApplications(): array
+    {
+        return ['ExampleApp1', 'ExampleApp2'];
     }
 }   

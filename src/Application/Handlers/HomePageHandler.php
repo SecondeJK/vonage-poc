@@ -27,6 +27,7 @@ class HomePageHandler implements RequestHandlerInterface
        $response->getBody()->write(
            $this->twig->render('home.twig', [
                 'balance' => $this->service->getAccountBalance(),
+                'applications' => $this->service->getApplications(),
             ])
        );
 
