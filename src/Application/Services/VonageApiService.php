@@ -66,4 +66,25 @@ class VonageApiService {
         $responsePayload = json_decode($response->getBody()->getContents(), true);
         return $responsePayload['_embedded']['applications'];
     }
+
+    public function createVonageApplication($payload)
+    {
+        $formattedPayload = [
+            'name' => $payload['application_name'],
+        ];
+
+        $response = $this->httpClient->post($this->baseUrl['v2'] . 'applications', [
+            'headers' => [
+                'Authorization' => $this->base64Auth(),
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $formattedPayload,
+        ]);
+
+        if (!$response->getStatusCode(200)) {
+            return false;
+        }
+
+        return true;
+    }
 }   

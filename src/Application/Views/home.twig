@@ -1,33 +1,56 @@
 <html>
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
     </head>
     <body class="py-5">
         <div class="container">
             <h1>Vonage POC Application</h1>
-            <p>This is a simple PoC application that contains the following:
-            <ul>
-                <li>Slim framework for DI, in Vonage's case the IoC container is custom built with PSR standards.</li>
-                <li>Twig for quick templating. Nobody mixes HTML and PHP tags anymore.</li>
-                <li>Bootstrap to make it at least a bit readable.</li>
-                <li>Basic unit tests for the local API wrapper connecting to Vonage's API.</li>
-            </ul>
-            <p>
             <p>My Balance: {{ balance }}</p>
             <h2 style="margin-bottom:50px;">Applications</h2>
             <h4>Create Application</h4>
-            <form>
+            <form action="/applications/create" method="POST">
                 <div class="form-group">
                     <label for="application_name">Application Name</label>
-                    <input type="text" class="form-control" id="application_name"></input>
+                    <input name="application_name" type="text" class="form-control" id="application_name"></input>
                 </div>
                 <button type="submit" style="margin-top:10px;" class="btn btn-primary">Submit</button>
             </form>
             <h4>Current Applications</h4>
-            {% for application in applications %}
-                {{ application.id }}
-                {{ application.name }}
-            {% endfor %}
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for application in applications %}
+                <tr>
+                    <form method="POST">
+                        <td><input name="application_id" class="form-control" readOnly value="{{ application.id }}"></td>
+                        <td><input name="application_name" class="form-control" type="text" value="{{ application.name }}"></td>
+                        <td>
+                            <button type="submit" formaction="/applications/edit" title="save edit" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                            <button type="submit" formaction="/applications/delete" class="btn btn-danger"><i class="far fa-trash-alt"></i></button>
+                        </td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </table>
+            <h4>SMS Sending</h4>
+            <form action="/sms/send" method="POST">
+                <div class="form-group">
+                    <label for="sms_to">To</label>
+                    <input name="sms_to" type="text" class="form-control" id="sms_to"></input>
+                    <label for="sms_from">From</label>
+                    <input name="sms_from" type="text" class="form-control" id="sms_from"></input>
+                    <label for="sms_message">Message</label>
+                    <input name="sms_message" type="text" class="form-control" id="sms_message"></input>
+                </div>
+                <button type="submit" style="margin-top:10px;" class="btn btn-primary">Submit</button>
+            </form>
         </div>
     </body>
 </html>
