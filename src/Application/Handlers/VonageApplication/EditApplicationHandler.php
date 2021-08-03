@@ -17,7 +17,7 @@ class EditApplicationHandler implements RequestHandlerInterface
 
    public function handle(ServerRequestInterface $request): ResponseInterface
    {
-       die(var_dump($request->getParsedBody()));
+       $this->service->updateVonageApplication($request->getParsedBody());
        $response = new Response();
 
        return $response->withHeader('Location', '/');

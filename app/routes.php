@@ -8,6 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\App;
 use Slim\Interfaces\RouteCollectorProxyInterface as Group;
 use App\Application\Handlers\HomePageHandler;
+use App\Application\Handlers\Sms\SendSmsHandler;
 use App\Application\Handlers\VonageApplication\CreateApplicationHandler;
 use App\Application\Handlers\VonageApplication\DeleteApplicationHandler;
 use App\Application\Handlers\VonageApplication\EditApplicationHandler;
@@ -27,7 +28,7 @@ return function (App $app) {
     });
 
     $app->group('/sms', function (Group $group) {
-        $group->post('send', SendSmsHandler::class);
+        $group->post('/send', SendSmsHandler::class);
     });
 
     $app->group('/users', function (Group $group) {

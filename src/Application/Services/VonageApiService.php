@@ -18,7 +18,8 @@ class VonageApiService {
      */
     protected array $baseUrl = [
         'account' => 'https://rest.nexmo.com/',
-        'v2' => 'https://api.nexmo.com/v2/'
+        'v2' => 'https://api.nexmo.com/v2/',
+        'sms' => 'https://api.nexmo.com/v0.1/',
     ];
 
     protected Client $httpClient;
@@ -86,5 +87,58 @@ class VonageApiService {
         }
 
         return true;
+    }
+
+    public function updateVonageApplication($payload)
+    {
+        $formattedPayload = [
+            'name' => $payload['application_name'],
+        ];
+
+        $response = $this->httpClient->put($this->baseUrl['v2'] . 'applications/' . $payload['application_id'], [
+            'headers' => [
+                'Authorization' => $this->base64Auth(),
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $formattedPayload,
+        ]);
+    }
+
+    public function deleteVonageApplication($payload)
+    {
+        $response = $this->httpClient->delete($this->baseUrl['v2'] . 'applications/' . $payload['application_id'], [
+            'headers' => [
+                'Authorization' => $this->base64Auth(),
+                'Content-Type' => 'application/json',
+            ]
+        ]);
+    }
+
+    public function sendSms($payload)
+    {
+        $formattedPayload = [
+            'from' => [
+                'type' => 'sms',
+                'number' => $payload['sms_from']
+            ],
+            'to' => [
+                'type' => 'sms',
+                'number' => $payload['sms_to']
+            ],
+            'message' => [
+                'content' => [
+                    'type' => 'text',
+                    'text' => $payload['sms_message']
+                ]
+            ],
+        ];
+
+        $response = $this->httpClient->post($this->baseUrl['sms'] . 'messages/', [
+            'headers' => [
+                'Authorization' => $this->base64Auth(),
+                'Content-Type' => 'application/json',
+            ],
+            'json' => $formattedPayload,
+        ]);
     }
 }   
