@@ -65,6 +65,7 @@ class VonageApiService {
         ]);
 
         $responsePayload = json_decode($response->getBody()->getContents(), true);
+        
         return $responsePayload['_embedded']['applications'];
     }
 
