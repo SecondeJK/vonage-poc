@@ -14,3 +14,12 @@
 * Error catching
 * UI feedback
 * Testing
+
+#### Run it
+
+Requirements:
+* [Composer](https://getcomposer.org/doc/00-intro.md)
+* [PHP8](https://www.php.net/releases/8.0/en.php)
+
+To start, use PHP's built in webserver:
+```php -S localhost:8080 -t public public/index.php```
